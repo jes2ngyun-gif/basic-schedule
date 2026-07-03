@@ -36,3 +36,4 @@ public class Schedule extends BaseEntity {
         return !this.password.equals(password);
 
     }
+}

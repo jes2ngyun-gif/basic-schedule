@@ -3,6 +3,7 @@ package com.sparta.basicschedule.schedule.service;
 import com.sparta.basicschedule.schedule.dto.ScheduleGetAllResponse;
 import com.sparta.basicschedule.schedule.dto.ScheduleSaveRequest;
 import com.sparta.basicschedule.schedule.dto.ScheduleSaveResponse;
+import com.sparta.basicschedule.schedule.dto.ScheduleUpdateRequest;
 import com.sparta.basicschedule.schedule.entity.Schedule;
 import com.sparta.basicschedule.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,28 @@ public class ScheduleService {
     public ScheduleGetAllResponse findById(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다. id=" + id));
+
+        return new ScheduleGetAllResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getWriter(),
+                schedule.getCreatedAt(),
+                schedule.getModifiedAt()
+        );
+    }
+
+    @Transactional
+    public ScheduleGetAllResponse update(Long id, ScheduleUpdateRequest request) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다. id=" + id));
+
+        if (schedule.isPasswordMismatch(request.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        schedule.update(request.getTitle(), request.getWriter());
+        // save() 없음! 여기가 Dirty Checking 포인트
 
         return new ScheduleGetAllResponse(
                 schedule.getId(),
