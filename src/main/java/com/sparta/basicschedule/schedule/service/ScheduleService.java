@@ -60,4 +60,20 @@ public class ScheduleService {
                 ))
                 .toList();
     }
+    @Transactional(readOnly = true)
+    public ScheduleGetAllResponse findById(Long id) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다. id=" + id));
+
+        return new ScheduleGetAllResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getWriter(),
+                schedule.getCreatedAt(),
+                schedule.getModifiedAt()
+        );
+    }
+
+
 }

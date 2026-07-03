@@ -31,4 +31,9 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findAll(writer));
 
     }
+
+    @GetMapping("/schedules/{id}")
+    public ResponseEntity<ScheduleGetAllResponse> getOne(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findById(id));
+    }
 }
