@@ -1,9 +1,6 @@
 package com.sparta.basicschedule.schedule.controller;
 
-import com.sparta.basicschedule.schedule.dto.ScheduleGetAllResponse;
-import com.sparta.basicschedule.schedule.dto.ScheduleSaveRequest;
-import com.sparta.basicschedule.schedule.dto.ScheduleSaveResponse;
-import com.sparta.basicschedule.schedule.dto.ScheduleUpdateRequest;
+import com.sparta.basicschedule.schedule.dto.*;
 import com.sparta.basicschedule.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,5 +42,15 @@ public class ScheduleController {
             @RequestBody ScheduleUpdateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(id, request));
+    }
+
+
+    @DeleteMapping("/schedules/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @RequestBody ScheduleDeleteRequest request
+    ) {
+        scheduleService.delete(id, request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

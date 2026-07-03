@@ -1,9 +1,6 @@
 package com.sparta.basicschedule.schedule.service;
 
-import com.sparta.basicschedule.schedule.dto.ScheduleGetAllResponse;
-import com.sparta.basicschedule.schedule.dto.ScheduleSaveRequest;
-import com.sparta.basicschedule.schedule.dto.ScheduleSaveResponse;
-import com.sparta.basicschedule.schedule.dto.ScheduleUpdateRequest;
+import com.sparta.basicschedule.schedule.dto.*;
 import com.sparta.basicschedule.schedule.entity.Schedule;
 import com.sparta.basicschedule.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -96,6 +93,18 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getModifiedAt()
         );
+    }
+
+    @Transactional
+    public void delete(Long id, ScheduleDeleteRequest request) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다. id=" + id));
+
+        if (schedule.isPasswordMismatch(request.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        scheduleRepository.delete(schedule);
     }
 
 
