@@ -1,5 +1,6 @@
 package com.sparta.basicschedule.schedule.service;
 
+import com.sparta.basicschedule.schedule.dto.ScheduleGetAllResponse;
 import com.sparta.basicschedule.schedule.dto.ScheduleSaveRequest;
 import com.sparta.basicschedule.schedule.dto.ScheduleSaveResponse;
 import com.sparta.basicschedule.schedule.entity.Schedule;
@@ -7,6 +8,9 @@ import com.sparta.basicschedule.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +37,27 @@ public class ScheduleService {
         );
 
     }
+    @Transactional(readOnly = true)
+    public List<ScheduleGetAllResponse> findAll(String writer) {
 
+
+        List<Schedule> schedules;
+
+        if (writer == null || writer.isBlank()) {
+            schedules = scheduleRepository.findAllByOrderByModifiedAtDesc();
+        } else {
+            schedules = scheduleRepository.findAllByWriterOrderByModifiedAtDesc(writer);
+        }
+
+        return schedules.stream()
+                .map(schedule -> new ScheduleGetAllResponse(
+                        schedule.getId(),
+                        schedule.getTitle(),
+                        schedule.getContent(),
+                        schedule.getWriter(),
+                        schedule.getCreatedAt(),
+                        schedule.getModifiedAt()
+                ))
+                .toList();
+    }
 }

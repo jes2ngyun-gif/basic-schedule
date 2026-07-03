@@ -1,14 +1,15 @@
 package com.sparta.basicschedule.schedule.controller;
 
+import com.sparta.basicschedule.schedule.dto.ScheduleGetAllResponse;
 import com.sparta.basicschedule.schedule.dto.ScheduleSaveRequest;
 import com.sparta.basicschedule.schedule.dto.ScheduleSaveResponse;
 import com.sparta.basicschedule.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +22,13 @@ public class ScheduleController {
             @RequestBody ScheduleSaveRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(request));
+    }
+
+    @GetMapping("/schedules")
+    public ResponseEntity<List<ScheduleGetAllResponse>> getAll(
+            @RequestParam(required = false) String writer
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findAll(writer));
+
     }
 }
